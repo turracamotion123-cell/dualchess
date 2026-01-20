@@ -983,37 +983,25 @@ input[type=range] {
         box-shadow: 0 0 15px 2px rgba(231, 76, 60, 0.7);
     }
 }
-/* EN STYLE.CSS - Borra el bloque .tablero-en-jaque anterior y pega ESTO: */
-
-/* 1. Desactivamos el brillo en el contenedor grande (el que tiene el espacio negro) */
-.tablero-en-jaque {
-    animation: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    z-index: 50;
-}
-
-/* 2. Activamos el brillo DIRECTAMENTE en la cuadrícula de casillas (Hijo) */
-/* Esto hace que el marco rojo se pegue exactamente a las piezas */
-.tablero-en-jaque .tablero {
-    animation: palpitarJaque 1s infinite ease-in-out;
-    z-index: 51;
-}
-
 /* =========================================================
-   SOLUCIÓN FINAL JAQUE: TÉCNICA DE LA CAPA SUPERPUESTA
+   SOLUCIÓN FINAL: JAQUE QUE RESPETA LA SKIN (VERSIÓN BLINDADA)
    ========================================================= */
 
-/* 1. Preparamos el contenedor para que acepte la capa encima */
-.tablero-en-jaque, 
-.wrapper-tablero.tablero-en-jaque {
-    position: relative !important;
-    /* IMPORTANTE: No tocamos el background. 
-       Así la skin o el color original se quedan quietos. */
+/* 1. PROTECCIÓN DE LA SKIN */
+/* Esta regla asegura que, aunque haya jaque, la imagen de fondo (tu skin) NO se borre */
+.wrapper-tablero.con-skin.tablero-en-jaque {
+    background-color: transparent !important; /* Solo quitamos el color sólido de fondo */
+    background-blend-mode: normal !important; 
+    /* IMPORTANTE: Al no poner 'background: none', la imagen se queda quieta. */
 }
 
-/* 2. Creamos la "Capa de Cristal Rojo" (Overlay) */
-/* Esto crea un elemento fantasma que se pone ENCIMA del tablero */
+/* 2. CREAMOS EL EFECTO ROJO EN UNA CAPA APARTE (Overlay) */
+/* Usamos ::after para crear un "vidrio rojo" fantasma encima del tablero */
+.tablero-en-jaque, 
+.wrapper-tablero.tablero-en-jaque {
+    position: relative !important; /* Necesario para que el vidrio se ajuste al tamaño */
+}
+
 .tablero-en-jaque::after {
     content: "" !important;
     position: absolute !important;
@@ -1022,25 +1010,25 @@ input[type=range] {
     width: 100% !important;
     height: 100% !important;
     
-    /* El efecto rojo (Sombra interna fuerte) */
-    box-shadow: inset 0 0 30px 10px rgba(255, 0, 0, 0.7) !important;
+    /* El brillo rojo (Sombra interna) */
+    box-shadow: inset 0 0 40px 10px rgba(255, 0, 0, 0.8) !important;
     animation: palpitarJaqueOverlay 1s infinite ease-in-out !important;
     
     /* Z-INDEX CLAVE: */
-    z-index: 50 !important; /* Se pone ENCIMA de las casillas (que son nivel 0) */
-    pointer-events: none !important; /* Deja pasar los clics para mover piezas */
+    z-index: 50 !important; /* Se pone ENCIMA del tablero */
+    pointer-events: none !important; /* DEJA PASAR LOS CLICS (puedes mover piezas) */
 }
 
-/* 3. Las piezas deben flotar ENCIMA de la capa roja */
-/* Si no, se verían teñidas de rojo también */
+/* 3. COLOCAMOS LAS PIEZAS ENCIMA DE TODO */
+/* Las piezas deben estar encima del vidrio rojo, si no se verían teñidas */
 .pieza {
-    z-index: 100 !important; /* Nivel superior a todo */
     position: relative !important;
+    z-index: 100 !important; 
 }
 
-/* 4. La animación exclusiva para la capa */
+/* 4. LA ANIMACIÓN DEL BRILLO */
 @keyframes palpitarJaqueOverlay {
     0% { box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.5); }
-    50% { box-shadow: inset 0 0 60px 15px rgba(255, 0, 0, 0.9); }
+    50% { box-shadow: inset 0 0 60px 20px rgba(255, 0, 0, 0.9); }
     100% { box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.5); }
 }
