@@ -1001,82 +1001,45 @@ input[type=range] {
 }
 
 /* =========================================================
-   PARCHE UNIVERSAL: ROTACIÓN EN TODOS LOS MODOS (IA, PRIVADA, PÚBLICA)
+   CORRECCIÓN DEFINITIVA: JAQUE QUE RESPETA LA SKIN
    ========================================================= */
 
-@media (max-width: 900px) {
-    
-    /* 1. REGLA MAESTRA DE ROTACIÓN DE TABLEROS */
-    /* Buscamos la clase .volteado en el juego, en el contenedor O en el body */
-    .juego-completo.volteado #wrapper-principal,
-    .juego-completo.volteado #wrapper-fantasma,
-    #contenedor-principal-juego.volteado #wrapper-principal,
-    #contenedor-principal-juego.volteado #wrapper-fantasma,
-    body.volteado #wrapper-principal,
-    body.volteado #wrapper-fantasma {
-        transform: rotate(180deg) !important;
-    }
-
-    /* 2. REGLA MAESTRA DE ENDEREZAR PIEZAS */
-    /* Las piezas deben girar para no quedar de cabeza */
-    .juego-completo.volteado .pieza,
-    #contenedor-principal-juego.volteado .pieza,
-    body.volteado .pieza {
-        transform: rotate(180deg) !important;
-    }
-
-    /* 3. REGLA MAESTRA PARA COORDENADAS (Opcional) */
-    .juego-completo.volteado .notacion-numeros,
-    .juego-completo.volteado .notacion-letras,
-    #contenedor-principal-juego.volteado .notacion-numeros,
-    #contenedor-principal-juego.volteado .notacion-letras {
-        transform: rotate(180deg) !important;
-    }
-}
-
-
-/* =========================================================
-   CORRECCIÓN CRÍTICA: PANTALLA NEGRA EN JAQUE / SKINS
-   ========================================================= */
-
-/* 1. Forzamos que el estado de JAQUE sea transparente en el fondo */
-/* Esto evita que un color sólido tape la imagen de la skin */
-.tablero-en-jaque,
+/* 1. Al contenedor en jaque le quitamos el color negro, PERO NO LA IMAGEN */
+.tablero-en-jaque, 
 .wrapper-tablero.tablero-en-jaque,
 .wrapper-tablero.con-skin.tablero-en-jaque {
+    /* Hacemos transparente el color de fondo solido */
     background-color: transparent !important; 
-    background-image: none !important; /* Evita que el jaque intente poner su propia imagen */
-    box-shadow: none !important; /* Quitamos la sombra del contenedor para pasarla al hijo */
+    
+    /* CRÍTICO: No tocamos background-image. 
+       Al no poner 'none', la skin que pone tu JS se mantiene visible. */
 }
 
-/* 2. Aplicamos el brillo rojo SOLO al borde o como sombra, sin tocar el fondo */
-/* Usamos el hijo directo (.tablero) para que el brillo quede exacto */
+/* 2. El efecto de Jaque será SOLO una sombra roja interna */
+/* Esto se dibuja "encima" de la skin sin borrarla */
 .tablero-en-jaque .tablero {
+    box-shadow: inset 0 0 40px 10px rgba(255, 0, 0, 0.7) !important;
     animation: palpitarJaque 1s infinite ease-in-out !important;
-    background-color: transparent !important; /* Asegura que la grilla también sea transparente */
+    
+    /* La rejilla interna también transparente para ver la skin */
+    background: transparent !important; 
     z-index: 50 !important;
 }
 
-/* 3. Redefinimos la animación para asegurar que NO pinte el fondo de negro */
+/* 3. Animación de pulsación roja (Solo luz, sin fondo) */
 @keyframes palpitarJaque {
-    0% {
-        box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.6), 0 0 15px rgba(255, 0, 0, 0.6);
+    0% { 
+        box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.5); 
     }
-    50% {
-        box-shadow: inset 0 0 40px 10px rgba(255, 0, 0, 0.9), 0 0 30px rgba(255, 0, 0, 0.9);
+    50% { 
+        box-shadow: inset 0 0 60px 20px rgba(255, 0, 0, 0.9); 
     }
-    100% {
-        box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.6), 0 0 15px rgba(255, 0, 0, 0.6);
+    100% { 
+        box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.5); 
     }
 }
 
-/* 4. ASEGURAR VISIBILIDAD DE PIEZAS Y SKIN */
-/* Esto garantiza que la imagen de la skin siempre tenga prioridad */
-.wrapper-tablero.con-skin {
-    z-index: 10 !important;
-}
-
-/* Las piezas siempre encima de cualquier efecto de jaque */
+/* 4. Aseguramos que las piezas floten encima del brillo */
 .pieza {
     z-index: 100 !important;
     position: relative;
