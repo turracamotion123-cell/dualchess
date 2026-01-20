@@ -1001,28 +1001,35 @@ input[type=range] {
 }
 
 /* =========================================================
-   PARCHE CRÍTICO: ARREGLO VISTA JUGADOR 2 (ONLINE)
+   PARCHE UNIVERSAL: ROTACIÓN EN TODOS LOS MODOS (IA, PRIVADA, PÚBLICA)
    ========================================================= */
 
 @media (max-width: 900px) {
     
-    /* 1. Rotamos los TABLEROS individuales si el juego tiene la clase 'volteado' (Jugador 2) */
-    /* Esto es necesario porque el contenedor padre es invisible con display:contents */
+    /* 1. REGLA MAESTRA DE ROTACIÓN DE TABLEROS */
+    /* Buscamos la clase .volteado en el juego, en el contenedor O en el body */
     .juego-completo.volteado #wrapper-principal,
-    .juego-completo.volteado #wrapper-fantasma {
+    .juego-completo.volteado #wrapper-fantasma,
+    #contenedor-principal-juego.volteado #wrapper-principal,
+    #contenedor-principal-juego.volteado #wrapper-fantasma,
+    body.volteado #wrapper-principal,
+    body.volteado #wrapper-fantasma {
         transform: rotate(180deg) !important;
     }
 
-    /* 2. Enderezamos las PIEZAS */
-    /* Al rotar el tablero, las piezas quedan de cabeza. Esto las vuelve a poner de pie. */
-    .juego-completo.volteado .pieza {
+    /* 2. REGLA MAESTRA DE ENDEREZAR PIEZAS */
+    /* Las piezas deben girar para no quedar de cabeza */
+    .juego-completo.volteado .pieza,
+    #contenedor-principal-juego.volteado .pieza,
+    body.volteado .pieza {
         transform: rotate(180deg) !important;
     }
 
-    /* 3. (Opcional) Rotamos las coordenadas si las usaras */
+    /* 3. REGLA MAESTRA PARA COORDENADAS (Opcional) */
     .juego-completo.volteado .notacion-numeros,
-    .juego-completo.volteado .notacion-letras {
+    .juego-completo.volteado .notacion-letras,
+    #contenedor-principal-juego.volteado .notacion-numeros,
+    #contenedor-principal-juego.volteado .notacion-letras {
         transform: rotate(180deg) !important;
     }
 }
-
