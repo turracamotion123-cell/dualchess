@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajedrez Dual</title>
+
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <link rel="apple-touch-icon" href="assets/icon-app.png">
+    
+    <meta name="theme-color" content="#2c2c2c">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+</head>
+<body>
+
+    <div id="menu-principal">  
+        <h1>Dual Chess</h1>
+        
+        <div class="indicador-monedas-menu">💰 <span id="menu-monedas-val">0</span></div>
+
+        <div class="contenedor-nombre">
+            <label for="input-nombre-usuario">Tu Nombre de Jugador:</label>
+            <input type="text" id="input-nombre-usuario" placeholder="Tu Nombre" maxlength="12">
+        </div>
+
+        <button id="btn-jugar-local">Jugar vs Jugador (Local)</button>
+        <button id="btn-jugar-ia">Jugar vs IA</button>
+        <button id="btn-menu-online" class="boton-online">Jugar Online</button>
+        <button id="btn-tienda" class="boton-info" style="background-color: #e67e22;">🛒 Tienda</button>
+        <button id="btn-ver-reglas-menu" class="boton-info">📜 Reglas del Juego</button>
+        
+        <button id="btn-configuracion" class="boton-secundario">⚙️ Configuración</button>
+    </div>
+
+    <div id="menu-config-ia">
+        <h2>Partida vs IA</h2>
+        <div class="grupo-opciones">
+            <h3>Elige tu color:</h3>
+            <button id="btn-color-blancas" class="opcion-seleccionada">Jugar como Blancas</button>
+            <button id="btn-color-negras">Jugar como Negras</button>
+        </div>
+        <div class="grupo-opciones">
+            <h3>Dificultad:</h3>
+            <button id="btn-dif-facil" class="opcion-seleccionada">Fácil</button>
+            <button id="btn-dif-medio">Medio</button>
+            <button id="btn-dif-dificil">Difícil</button>
+        </div>
+        <button id="btn-comenzar-ia" class="boton-primario">¡Comenzar!</button>
+        <button id="btn-volver-menu" class="boton-secundario">Volver</button>
+    </div>
+
+    <div id="menu-online">
+        <h2>Jugar Online</h2>
+        
+        <div class="caja-online" style="border-color: #f1c40f;">
+            <h3>Partida Rápida</h3>
+            <p>Busca rival automáticamente.</p>
+            <button id="btn-buscar-publica" class="boton-primario" style="background-color: #f39c12;">🔍 Buscar Rival</button>
+        </div>
+
+        <div class="separador-o">- O -</div>
+
+        <div class="caja-online">
+            <h3>Partida Privada</h3>
+            <p>Crea o únete con código.</p>
+            <button id="btn-crear-sala" class="boton-secundario">Crear Sala Privada</button>
+            <div style="margin-top:10px;">
+                <input type="text" id="input-codigo-sala" placeholder="CÓDIGO" maxlength="6">
+                <button id="btn-unirse-sala" class="boton-secundario">Unirse</button>
+            </div>
+        </div>
+        
+        <button id="btn-volver-online" class="boton-secundario" style="margin-top:20px">Volver</button>
+    </div>
+
+    <div id="pantalla-espera">
+        <h2 id="titulo-espera">Esperando Oponente...</h2>
+        
+        <div id="contenedor-codigo-espera" class="codigo-display">
+            <p>Tu Código de Sala:</p>
+            <h1 id="texto-codigo-sala">---</h1>
+            <p>Comparte este código.</p>
+        </div>
+
+        <div class="spinner"></div>
+        <button id="btn-cancelar-espera" class="boton-secundario">Cancelar</button>
+    </div>
+
+<div id="contenedor-principal-juego">
+            <button id="btn-salir-partida" style="background: #c0392b; margin-top: 20px;">🏳️ Salir</button>
+    <div class="area-cabecera">
+        <h1>Ajedrez Dual</h1>
+        <div id="info-online-bar">
+            <span id="nombre-blancas-display" style="color: #fff; font-weight:bold;">Blancas</span> 
+            <span style="color:#888; margin:0 5px;">VS</span> 
+            <span id="nombre-negras-display" style="color: #fff; font-weight:bold;">Negras</span>
+            | Soy: <strong id="mi-color-texto" style="color: #f1c40f;">---</strong>
+            <div id="estado-rival" style="color: #e74c3c; font-size: 0.8em; display:inline-block; margin-left:5px;"></div>
+        </div>
+        <div id="timer-display" style="display:none;"></div> 
+    </div>
+
+    <div class="contenedor-juego">
+        <div class="juego-completo" id="contenedor-juego-principal">
+            <div class="wrapper-tablero" id="wrapper-principal">
+                <div id="banner-jaque-principal" class="banner-jaque">¡JAQUE!</div>
+                <div id="tableroPrincipal" class="tablero"></div>
+            </div>
+        </div>
+
+        <div class="juego-completo" id="contenedor-juego-fantasma">
+            <div class="wrapper-tablero" id="wrapper-fantasma">
+                <div id="banner-jaque-fantasma" class="banner-jaque">¡JAQUE!</div>
+                <div id="tableroFantasma" class="tablero"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel-derecho">
+        <div class="contenedor-relojes">
+            <div id="reloj-blancas" class="reloj reloj-activo">10:00</div>
+            <div id="reloj-negras" class="reloj">10:00</div>
+        </div>
+
+    </div>
+    
+
+</div>
+
+    <div id="modal-fin-partida" class="modal-overlay">
+        <div class="modal-contenido">
+            <h2 id="mensaje-texto">¡JAQUE MATE!</h2>
+            <button id="boton-reiniciar">Volver al Menú</button>
+        </div>
+    </div>
+    
+    <div id="modal-reglas" class="modal-overlay">
+        <div class="modal-contenido modal-reglas-contenido">
+            <h2>📜 Reglas de Ajedrez Dual</h2>
+            <div class="texto-reglas">
+                <p><strong>1. Doble Tablero:</strong> Juegas en dos tableros simultáneamente.</p>
+                <p><strong>2. Piezas Fantasma:</strong> Cuando capturas una pieza en el tablero principal, ¡esta revive en el tablero fantasma! (bajo tu control).</p>
+                <p><strong>3. Turno Flexible:</strong> En tu turno, puedes hacer <strong>UN</strong> movimiento, eligiendo libremente si mueves en el Tablero Principal O en el Tablero Fantasma.</p>
+                <p><strong>4. Jaque Global:</strong> Si tu Rey está en Jaque en el Tablero Principal, <strong>ESTÁS OBLIGADO</strong> a defenderlo. No puedes mover en el tablero fantasma hasta que salgas del Jaque.</p>
+                <p><strong>5. Victoria:</strong> Ganas si haces Jaque Mate en <strong>CUALQUIERA</strong> de los dos tableros, o si el oponente se sacrifica (autocaptura).</p>
+            </div>
+            <button id="btn-cerrar-reglas">¡Entendido!</button>
+        </div>
+    </div>
+
+    <div id="modal-config" class="modal-overlay">
+        <div class="modal-contenido">
+            <h2>⚙️ Configuración de Audio</h2>
+            <div class="control-volumen">
+                <label>🎵 Música de Menú</label>
+                <input type="range" id="slider-musica" min="0" max="1" step="0.1" value="0.5">
+            </div>
+            <div class="control-volumen">
+                <label>🔊 Efectos de Sonido</label>
+                <input type="range" id="slider-efectos" min="0" max="1" step="0.1" value="0.5">
+            </div>
+            <button id="btn-cerrar-config">Guardar y Cerrar</button>
+        </div>
+    </div>
+    
+    <div id="modal-coronacion" class="modal-overlay">
+        <div class="modal-contenido">
+            <h2>¡Peón Coronado!</h2>
+            <p>Elige una pieza para promocionar:</p>
+            <div class="opciones-coronacion">
+                <button onclick="window.finalizarCoronacion('Q')" class="btn-pieza-coronacion">Reina ♛</button>
+                <button onclick="window.finalizarCoronacion('R')" class="btn-pieza-coronacion">Torre ♜</button>
+                <button onclick="window.finalizarCoronacion('B')" class="btn-pieza-coronacion">Alfil ♝</button>
+                <button onclick="window.finalizarCoronacion('N')" class="btn-pieza-coronacion">Caballo ♞</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pantalla-tienda" class="modal-overlay">
+        <div class="modal-contenido tienda-contenido">
+            <h2> Tienda de Skins </h2>
+<div class="info-usuario-tienda">
+    <span>💰 Monedas: <strong id="texto-monedas">0</strong></span>
+    <button id="btn-ad-tienda" style="padding: 5px 15px; font-size: 0.9em; margin-left: 15px; background-color: #8e44ad;">
+        🎥 +5 Monedas
+    </button>
+</div>
+            
+            <div class="tabs-tienda">
+                <button id="tab-piezas" class="tab-activa" onclick="cambiarTabTienda('piezas')">Piezas</button>
+                <button id="tab-tableros" onclick="cambiarTabTienda('tableros')">Tableros</button>
+            </div>
+
+            <div id="grid-tienda" class="grid-tienda">
+            </div>
+
+            <button id="btn-cerrar-tienda" class="boton-secundario">Cerrar Tienda</button>
+        </div>
+    </div>
+    
+    <div id="modal-alerta-generica" class="modal-overlay" style="z-index: 3000;">
+        <div class="modal-contenido" style="max-width: 400px;">
+            <h3 id="texto-alerta-generica" style="margin-bottom: 20px; color: #EFEFEF;">Aviso</h3>
+            <button id="btn-cerrar-alerta-generica" class="boton-primario">Entendido</button>
+        </div>
+    </div>
+
+    <div id="modal-confirmacion-generica" class="modal-overlay" style="z-index: 3000;">
+        <div class="modal-contenido" style="max-width: 400px;">
+            <h3 id="texto-confirmacion-generica" style="margin-bottom: 20px; color: #EFEFEF;">¿Estás seguro?</h3>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <button id="btn-confirmar-no" style="background-color: #c0392b; flex: 1;">No/Cancelar</button>
+                <button id="btn-confirmar-si" style="background-color: #27ae60; flex: 1;">Sí/Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-notificacion" class="toast"></div>
+
+    <audio id="snd-musica" src="sonidos/MusicaMenu.mp3" loop preload="auto"></audio>
+    <audio id="snd-inicio" src="sonidos/InicioPartida.mp3" preload="auto"></audio>
+    <audio id="snd-mov-yo" src="sonidos/Movimiento1.mp3" preload="auto"></audio>
+    <audio id="snd-mov-rival" src="sonidos/Movimiento2.mp3" preload="auto"></audio>
+    <audio id="snd-captura-yo" src="sonidos/Captura.mp3" preload="auto"></audio>
+    <audio id="snd-captura-me" src="sonidos/CapturaMe.mp3" preload="auto"></audio>
+    <audio id="snd-enroque" src="sonidos/Enroque.mp3" preload="auto"></audio>
+    <audio id="snd-jaque" src="sonidos/Jaque.mp3" preload="auto"></audio>
+    <audio id="snd-victoria" src="sonidos/VictoriaSonido.mp3" preload="auto"></audio>
+    <audio id="snd-derrota" src="sonidos/DerrotaSonido.mp3" preload="auto"></audio>
+    <audio id="snd-boton" src="sonidos/BotonesSeleccion.mp3" preload="auto"></audio>
+
+    <script src="app.js"></script>
+</body>
+</html>

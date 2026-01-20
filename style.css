@@ -1,0 +1,1003 @@
+/* Estilo general y FONDO RESPONSIVO DESDE CARPETA ASSETS */
+body {
+    font-family: Arial, sans-serif;
+    color: #FFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+
+    /* --- CONFIGURACI車N DE FONDO --- */
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed; 
+
+    /* --- IMAGEN POR DEFECTO (PC / Tablet Horizontal) --- */
+    background-image: url('assets/fondo-pc.jpg');
+
+    /* --- CAPA OSCURA --- */
+    box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.7); 
+}
+
+/* --- REGLA PARA CELULARES (Pantallas verticales) --- */
+@media (max-width: 768px) {
+    body {
+        background-image: url('assets/fondo-movil.jpg');
+    }
+}
+
+h1 {
+    color: #EFEFEF;
+    margin-bottom: 40px; 
+}
+
+/* PANTALLAS */
+#menu-principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+}
+#menu-config-ia, 
+#menu-online, 
+#pantalla-espera, 
+
+
+/* INPUT DE NOMBRE DE USUARIO */
+.contenedor-nombre {
+    margin-bottom: 20px;
+    text-align: center;
+}
+.contenedor-nombre label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #f1c40f;
+}
+#input-nombre-usuario {
+    padding: 12px;
+    font-size: 1.2em;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #6a994e;
+    background-color: #444;
+    color: white;
+    width: 250px;
+}
+
+/* BOTONES GENERALES */
+button {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    background-color: #6a994e;
+    border: none;
+    border-radius: 8px;
+    padding: 15px 30px;
+    margin: 10px;
+    cursor: pointer;
+    min-width: 250px;
+    transition: transform 0.2s;
+}
+button:hover { background-color: #8aae5e; transform: scale(1.02); }
+button:disabled { background-color: #555; color: #999; cursor: not-allowed; transform: none; }
+.boton-online { background-color: #8e44ad; }
+.boton-online:hover { background-color: #9b59b6; }
+.boton-info { background-color: #17a2b8; margin-top: 20px; }
+.boton-info:hover { background-color: #138496; }
+.boton-secundario { background-color: #555; }
+.boton-secundario:hover { background-color: #666; }
+
+/* CONTROLES DE VOLUMEN */
+.control-volumen {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+.control-volumen label {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+input[type=range] {
+    width: 80%;
+    cursor: pointer;
+    accent-color: #6a994e;
+}
+
+/* MEN迆S ESPEC赤FICOS */
+.caja-online {
+    background: #3a3a3a;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 300px;
+    border: 2px solid #555;
+    margin-bottom: 10px;
+}
+.separador-o { margin: 15px 0; font-weight: bold; color: #888; }
+#input-codigo-sala {
+    padding: 10px; font-size: 1.2em; width: 140px;
+    text-align: center; border-radius: 5px; border: none;
+    margin-bottom: 5px; text-transform: uppercase;
+}
+.codigo-display h1 {
+    color: #f1c40f; font-family: monospace; font-size: 3em;
+    margin: 10px 0; letter-spacing: 5px;
+}
+.grupo-opciones button {
+    font-size: 1em; color: #333; background-color: #DDD;
+    border: 3px solid #DDD; min-width: 150px; margin: 5px;
+}
+.grupo-opciones button.opcion-seleccionada {
+    background-color: #d4edc4; border-color: #6a994e; color: #222;
+}
+
+
+
+.juego-completo {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; /* <--- ESTO LO CENTRA PERFECTAMENTE */
+    position: relative; 
+    transition: transform 0.5s;
+}
+.fila-superior { display: flex; flex-direction: row; align-items: center; }
+
+.notacion-numeros {
+    height: 400px; width: 20px; margin-right: 5px;
+    display: grid; grid-template-rows: repeat(8, 50px);
+    align-items: center; justify-items: center;
+    font-weight: bold; color: #AAA; transition: transform 0.5s;
+}
+
+.notacion-letras {
+    width: 400px; height: 20px; margin-top: 5px; margin-left: 41px;
+    display: grid; grid-template-columns: repeat(8, 50px);
+    align-items: center; justify-items: center;
+    font-weight: bold; color: #AAA; transition: transform 0.5s;
+}
+
+
+
+
+
+/* TABLERO INTERNO (GRILLA) */
+.tablero {
+    display: grid; 
+    /* --- CORRECCI車N FINAL: minmax(0, 1fr) evita que el tablero baile --- */
+    grid-template-columns: repeat(8, minmax(0, 1fr)); 
+    grid-template-rows: repeat(8, minmax(0, 1fr));
+    /* ------------------------------------------------------------------ */
+    width: 100%; 
+    height: 100%; 
+    transition: transform 0.5s;
+}
+
+.casilla { width: 100%; height: 100%; position: relative; }
+
+/* Colores Default */
+.casilla-clara { background-color: #F0D9B5; }
+.casilla-oscura { background-color: #B58863; }
+
+/* Transparencia cuando hay skin */
+.wrapper-tablero.con-skin .casilla-clara,
+.wrapper-tablero.con-skin .casilla-oscura {
+    background-color: transparent !important;
+}
+
+.pieza {
+    width: 100%; height: 100%; -webkit-user-drag: none; user-select: none;
+    transition: transform 0.4s ease-in-out;
+    mix-blend-mode: normal !important; 
+    filter: none !important; 
+    
+    /* --- CORRECCI車N 2: Evita que la pieza se deforme --- */
+    object-fit: contain; 
+}
+
+/* ANIMACIONES Y ESTADOS */
+/* Busca la sección ANIMACIONES Y ESTADOS y pega esto ahí: */
+
+.banner-jaque {
+    position: absolute;
+    top: 0 !important;        /* Se pega al borde superior del tablero */
+    left: 0 !important;       /* Se alinea a la izquierda exacta */
+    width: 100% !important;   /* Mismo ancho exacto que el tablero */
+    
+    /* Esta línea es la MAGIA: Lo empuja hacia arriba su propia altura exacta */
+    transform: translateY(-100%); 
+    
+    display: none;
+    padding: 8px 0;
+    background-color: #c91818;
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 8px 8px 0 0; /* Redondeado suave arriba */
+    z-index: 500;
+    box-sizing: border-box;   /* Evita que el padding deforme el ancho */
+    margin: 0 !important;     /* Elimina espacios extraños */
+    border-bottom: 2px solid #a00; /* Línea separadora sutil */
+}
+
+.banner-jaque.visible { display: block; }
+
+.casilla-jaque::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(201, 24, 24, 0.5); z-index: 5; transition: transform 0.5s;
+}
+.casilla-atacante { background-color: rgba(201, 24, 24, 0.4); }
+
+.movimiento-valido::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 20%, rgba(0, 0, 0, 0.4) 80%);
+    opacity: 0.7; transition: transform 0.5s;
+}
+
+@keyframes palpitarPieza { 0% {transform:scale(1);} 50% {transform:scale(1.15);} 100% {transform:scale(1);} }
+@keyframes palpitarPiezaVolteada { 0% {transform:rotate(180deg) scale(1);} 50% {transform:rotate(180deg) scale(1.15);} 100% {transform:rotate(180deg) scale(1);} }
+
+.pieza-seleccionada { animation: palpitarPieza 0.8s infinite ease-in-out; position: relative; z-index: 10; }
+
+/* Enroques (Vista Normal) */
+.pieza-enroque-corto-rey,
+.pieza-enroque-corto-torre,
+.pieza-enroque-largo-rey,
+.pieza-enroque-largo-torre {
+    z-index: 100 !important; /* ESTO ES LO IMPORTANTE: hace que floten */
+    position: relative;
+}
+
+.pieza-enroque-corto-rey { transform: translateX(200%); }
+.pieza-enroque-corto-torre { transform: translateX(-200%); }
+.pieza-enroque-largo-rey { transform: translateX(-200%); }
+.pieza-enroque-largo-torre { transform: translateX(300%); }
+
+/* VOLTEO */
+.juego-completo.volteado { transform: rotate(180deg); }
+.juego-completo.volteado .notacion-numeros span,
+.juego-completo.volteado .notacion-letras span,
+.juego-completo.volteado .pieza,
+.juego-completo.volteado .banner-jaque,
+.juego-completo.volteado .casilla-jaque::after,
+.juego-completo.volteado .movimiento-valido::before {
+    transform: rotate(180deg);
+}
+.juego-completo.volteado .pieza-enroque-corto-rey { transform: rotate(180deg) translateX(200%); }
+.juego-completo.volteado .pieza-enroque-corto-torre { transform: rotate(180deg) translateX(-200%); }
+.juego-completo.volteado .pieza-enroque-largo-rey { transform: rotate(180deg) translateX(-200%); }
+.juego-completo.volteado .pieza-enroque-largo-torre { transform: rotate(180deg) translateX(300%); }
+
+/* POPUPS */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal-contenido {
+    background: #3a3a3a; border: 2px solid #EFEFEF; border-radius: 10px; padding: 30px;
+    text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); max-width: 80%;
+}
+.modal-reglas-contenido { text-align: left; max-width: 500px; }
+.texto-reglas { margin: 20px 0; color: #DDD; line-height: 1.5; }
+.toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background-color: #333; color: white; padding: 12px 25px; border-radius: 25px;
+    font-size: 1.1em; z-index: 2000; opacity: 0; visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s; border: 2px solid #FFF; box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+.toast.visible { opacity: 1; visibility: visible; }
+
+.spinner {
+    border: 4px solid #f3f3f3; border-top: 4px solid #6a994e; border-radius: 50%;
+    width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* --- ESTILOS CORONACI車N --- */
+.opciones-coronacion {
+    display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;
+}
+.btn-pieza-coronacion {
+    font-size: 1.1em; padding: 12px 20px; min-width: 110px;
+    background-color: #f1c40f; color: #2c2c2c;
+    border: 2px solid #FFF; border-radius: 8px;
+    cursor: pointer; transition: transform 0.2s, background-color 0.2s;
+}
+.btn-pieza-coronacion:hover {
+    background-color: #f39c12; transform: scale(1.1); box-shadow: 0 0 10px rgba(241, 196, 15, 0.5);
+}
+
+/* --- ESTILOS DE LA TIENDA --- */
+.tienda-contenido {
+    width: 90%; max-width: 800px; height: 80vh;
+    display: flex; flex-direction: column;
+}
+.info-usuario-tienda {
+    font-size: 1.5em; color: #f1c40f; margin-bottom: 15px;
+    background: #222; padding: 10px; border-radius: 8px;
+}
+.tabs-tienda { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; }
+.tabs-tienda button { flex: 1; max-width: 150px; padding: 10px; min-width: auto; }
+.tab-activa { background-color: #f1c40f !important; color: #000 !important; }
+
+.grid-tienda {
+    flex: 1; overflow-y: auto; display: grid;
+    /* Ajuste de columnas para que entren bien */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px; padding: 10px; border: 1px solid #555; border-radius: 8px;
+}
+
+.item-tienda {
+    background: #444; border: 2px solid #666; border-radius: 8px;
+    padding: 10px; display: flex; flex-direction: column; align-items: center;
+    transition: transform 0.2s;
+    /* Aseguramos que el contenido no se salga */
+    width: 100%; box-sizing: border-box;
+}
+.item-tienda:hover { transform: scale(1.05); border-color: #f1c40f; }
+.item-tienda img { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; }
+
+/* AJUSTES EXACTOS PARA LOS BOTONES DE TIENDA (Para que no se salgan) */
+.item-tienda button {
+    /* Quitamos el ancho m赤nimo grande global */
+    min-width: 0 !important;
+    /* Hacemos que ocupe el 90% del ancho de la tarjeta */
+    width: 90% !important;
+    /* Reducimos relleno y fuente */
+    padding: 6px 0 !important;
+    font-size: 13px !important;
+    margin: 5px 0 !important;
+}
+.item-tienda h4 { 
+    margin: 5px 0; font-size: 0.9em; text-align: center;
+    /* Evita que nombres largos rompan todo */
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+}
+
+.btn-comprar { background-color: #27ae60; }
+.btn-equipar { background-color: #2980b9; }
+.item-equipado { border: 3px solid #f1c40f; background: #2c2c2c; }
+
+/* Estilo del nuevo contador en el men迆 */
+.indicador-monedas-menu {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px 25px;
+    border-radius: 50px;
+    border: 2px solid #f1c40f;
+    color: #f1c40f;
+    font-weight: bold;
+    font-size: 1.4em;
+    margin-bottom: 20px;
+    display: inline-block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    text-shadow: 1px 1px 0 #000;
+}
+
+
+    h1 { font-size: 1.5em; margin-bottom: 20px; }
+    
+    /* --- CORRECCI車N 3: Ajuste m車vil robusto --- */
+    .wrapper-tablero { 
+        width: 90vw; 
+        height: auto; 
+        aspect-ratio: 1 / 1; 
+    }
+    
+    .wrapper-tablero.con-skin {
+        width: 90vw; 
+        height: auto; 
+        aspect-ratio: 1 / 1;
+        /* padding: 9vw; <-- COMENTADO O ELIMINADO para no pelear con el JS */
+        padding: 0; /* Dejar en 0 aqu赤 tambi谷n para que el JS controle */
+    }
+
+    .tablero { grid-template-columns: repeat(8, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); }
+    .notacion-numeros { height: 90vw; font-size: 0.8em; }
+    .notacion-letras { width: 90vw; margin-left: 0; font-size: 0.8em; }
+
+}
+/* --- AJUSTE DE BOTONES DE AVISOS Y CONFIRMACI車N --- */
+/* Pega esto al final de tu style.css */
+
+#modal-confirmacion-generica button, 
+#modal-alerta-generica button {
+    padding: 10px 20px !important; /* Menos relleno (m芍s flacos) */
+    font-size: 1rem !important;    /* Letra tama?o normal (no gigante) */
+    min-width: 100px !important;   /* Ancho m赤nimo controlado */
+    width: auto !important;        /* Que no se estiren al 100% si no es necesario */
+    margin: 0 10px !important;     /* Separaci車n entre ellos */
+    height: auto !important;
+}
+
+#modal-confirmacion-generica .modal-contenido,
+#modal-alerta-generica .modal-contenido {
+    max-width: 500px !important; /* Ahora es más ancho */
+    width: 90% !important;       /* Se adapta si la pantalla es pequeña */
+    padding: 25px !important;
+}
+.contenedor-relojes {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.reloj {
+    background-color: #333;
+    color: #FFF;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 1.4em;
+    border: 2px solid #555;
+    min-width: 80px;
+    text-align: center;
+    opacity: 0.6; /* Apagado por defecto */
+    transition: all 0.3s;
+}
+
+/* El reloj del turno actual se ilumina */
+.reloj-activo {
+    opacity: 1;
+    border-color: #f1c40f;
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.3);
+    transform: scale(1.05);
+}
+
+/* Estilo específico para diferenciar visualmente (opcional) */
+#reloj-blancas { background-color: #EFEFEF; color: #333; }
+#reloj-negras { background-color: #222; color: #FFF; }/* --- POSICIONAMIENTO EN LA PANTALLA --- */
+
+
+
+/* 2. Panel Derecho (Relojes y Botón) */
+.panel-derecho {
+    grid-area: panel;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    height: 80%; /* No ocupa todo el alto */
+    align-self: center;
+}
+
+/* Ajuste para que los relojes se vean bien en vertical en el panel derecho */
+.contenedor-relojes {
+    flex-direction: column; /* Relojes uno encima del otro */
+    margin-top: 20px;
+    width: 100%;
+}
+.reloj { margin-bottom: 10px; width: 100%; box-sizing: border-box;}
+
+
+
+/* --- REDUCCIÓN DE TAMAÑO DE TABLEROS --- */
+/* Esto es clave: hace que el tablero se base en la altura de la pantalla */
+.wrapper-tablero, .wrapper-tablero.con-skin {
+    width: auto !important; /* Anulamos anchos fijos */
+    height: 55vh;           /* Ocupa el 55% de la altura de la pantalla */
+    aspect-ratio: 1 / 1;    /* Se mantiene cuadrado */
+    border-width: 8px !important; /* Borde más fino para que entre mejor */
+}
+
+/* Ajuste de notaciones para que acompañen el tamaño */
+.notacion-numeros { height: 55vh; }
+.notacion-letras { width: 55vh; margin-left: 25px; }
+
+/* --- RESPONSIVE (Para celulares sigue viéndose vertical) --- */
+
+    
+    .panel-derecho {
+        flex-direction: row; /* En celular, botón y reloj lado a lado */
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        background: none;
+    }
+    .contenedor-relojes { flex-direction: row; margin-top: 0; margin-left: 10px;}
+    
+    .wrapper-tablero, .wrapper-tablero.con-skin {
+        height: auto;
+        width: 90vw !important; /* En celular usamos el ancho */
+    }
+    .notacion-numeros { height: 90vw; }
+    .notacion-letras { width: 90vw; }
+}/* =========================================
+   NUEVO DISEÑO: PANTALLA DE JUEGO (GRID)
+   ========================================= */
+
+/* 1. El Contenedor Principal: Define la cuadrícula */
+#contenedor-principal-juego {
+    display: none; /* Se mantiene oculto hasta que JS lo active */
+    
+    /* Ocupar toda la pantalla y FONDO FIJO */
+    width: 100vw;
+    height: 100vh;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: hidden; /* IMPORTANTE: Esto evita el scroll */
+    
+    /* Fondo de imagen */
+    background-image: url('assets/fondo-pc.jpg');
+    background-size: cover;
+    background-position: center;
+
+
+
+    
+    /* Definimos columnas: Izquierda (flexible) y Derecha (panel fijo de 220px) */
+    grid-template-columns: 1fr 220px;
+    
+    /* Definimos filas: Arriba (automático según texto) y Abajo (resto del espacio) */
+    grid-template-rows: auto 1fr; 
+    
+    /* Nombramos las áreas para colocar las cosas */
+    grid-template-areas: 
+        "cabecera panel"
+        "tableros panel";
+        
+    gap: 10px; /* Espacio entre zonas */
+    align-items: center; 
+}
+
+/* 2. Cabecera (Título e Info) -> Va en el área "cabecera" */
+.area-cabecera {
+    grid-area: cabecera;
+    text-align: center;
+    background: rgba(0,0,0,0.5); 
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+.area-cabecera h1 {
+    margin: 0;
+    font-size: 1.8em;
+    color: #f1c40f;
+    text-shadow: 2px 2px 4px #000;
+}
+#info-online-bar {
+    display: block !important;
+    color: #FFF;
+    font-size: 0.9em;
+}
+
+/* 3. Panel Derecho (Relojes y Botón) -> Va en el área "panel" */
+.panel-derecho {
+    grid-area: panel;
+    background: rgba(0, 0, 0, 0.7); 
+    height: 90%; 
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #555;
+}
+.contenedor-relojes {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* 4. Zona de Tableros -> Va en el área "tableros" */
+.contenedor-juego {
+    grid-area: tableros;
+    display: flex !important;
+    flex-direction: row !important; /* Tableros lado a lado */
+    justify-content: center;
+    align-items: center;
+    gap: 30px; 
+    width: 100%;
+    height: 100%;
+}
+
+/* EN STYLE.CSS - Reemplaza el bloque (CRÍTICO) por este limpio */
+.wrapper-tablero, .wrapper-tablero.con-skin {
+    height: 60vh !important; 
+    width: auto !important;  
+    aspect-ratio: 1 / 1; 
+    max-width: 45vw; 
+    margin: 0 !important;
+    
+    /* HEMOS BORRADO LAS LÍNEAS DE BORDER Y BOX-SIZING DE AQUÍ */
+    /* Así el tablero recupera su tamaño máximo original */
+}
+
+/* Ajustamos las notaciones al nuevo tamaño */
+.notacion-numeros { height: 60vh !important; }
+.notacion-letras { width: 60vh !important; margin-left: 0; }
+
+/* =========================================================
+   MASTER MEDIA QUERY: MÓVILES (SOLUCIÓN DEFINITIVA)
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    /* --- 1. FONDO MÓVIL --- */
+    body {
+        background-image: url('assets/fondo-movil.jpg');
+    }
+
+    /* --- 2. CONTENEDOR PRINCIPAL: Flex Vertical --- */
+    #contenedor-principal-juego {
+        display: flex !important; /* Necesario para ordenar los elementos */
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        
+        width: 100vw !important;
+        
+        /* HABILITAMOS SCROLL */
+        height: auto !important; 
+        min-height: 100dvh !important; 
+        overflow-y: auto !important; 
+        padding-bottom: 80px !important; /* Espacio extra abajo */
+        
+        grid-template-areas: none !important;
+        grid-template-columns: none !important;
+        grid-template-rows: none !important;
+        gap: 0 !important;
+    }
+
+    /* !!! PARCHE DE SEGURIDAD !!! */
+    /* Esto evita que el juego aparezca en el menú principal */
+    /* Si el sistema intenta ocultarlo (style="display: none"), ganará esta regla */
+    #contenedor-principal-juego[style*="none"] {
+        display: none !important;
+    }
+
+    /* Romper estructura horizontal antigua */
+    .contenedor-juego, .juego-completo {
+        display: contents !important; 
+    }
+
+    /* --- 3. CABECERA (TÍTULO Y BOTÓN SALIR) --- */
+    .area-cabecera {
+        order: 1; /* PRIMERO */
+        position: relative !important;
+        width: 100% !important;
+        height: 60px !important; 
+        display: flex !important;
+        justify-content: center; 
+        align-items: center;
+        margin-bottom: 10px !important;
+        
+        top: auto !important; left: auto !important; transform: none !important;
+        background: transparent !important;
+        pointer-events: auto !important;
+    }
+
+    .area-cabecera h1 {
+        font-size: 1.3rem !important;
+        margin: 0 !important;
+        text-align: center;
+        color: #f1c40f;
+        text-shadow: 1px 1px 2px #000;
+        z-index: 10;
+    }
+
+    /* BOTÓN SALIR */
+    #btn-salir-partida {
+        position: absolute !important;
+        left: 10px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        font-size: 0.8rem !important;
+        padding: 5px 10px !important;
+        width: auto !important;
+        min-width: auto !important;
+        margin: 0 !important;
+        z-index: 20;
+    }
+
+    #info-online-bar { display: none !important; }
+
+    /* --- 4. TABLERO LLENO (PRINCIPAL) -> ARRIBA --- */
+    #wrapper-principal {
+        order: 2 !important; /* POSICIÓN SUPERIOR */
+        
+        height: 42vh !important;
+        width: auto !important;
+        aspect-ratio: 1 / 1 !important;
+        margin: 0 !important;
+    }
+
+    /* --- 5. RELOJES (AL MEDIO) --- */
+    .panel-derecho {
+        order: 3 !important; /* POSICIÓN MEDIO */
+        width: 100% !important;
+        height: auto !important;
+        padding: 10px 0 !important;
+        background: transparent !important;
+        border: none !important;
+        
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .contenedor-relojes {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 20px !important;
+        margin: 0 !important;
+        width: auto !important;
+    }
+
+    .reloj {
+        font-size: 1.2rem !important;
+        padding: 5px 15px !important;
+        width: 80px !important;
+        text-align: center;
+        margin: 0 !important;
+    }
+
+    /* --- 6. TABLERO VACÍO (FANTASMA) -> ABAJO --- */
+    #wrapper-fantasma {
+        order: 4 !important; /* POSICIÓN INFERIOR */
+        
+        height: 42vh !important;
+        width: auto !important;
+        aspect-ratio: 1 / 1 !important;
+        margin: 0 !important;
+    }
+
+    /* --- 7. LIMPIEZA FINAL --- */
+    .notacion-numeros, .notacion-letras {
+        display: none !important;
+    }
+
+    .wrapper-tablero, .wrapper-tablero.con-skin {
+        max-width: 98vw !important;
+        border: 2px solid #555 !important;
+        box-sizing: border-box !important;
+    }
+    
+    .tablero {
+        width: 100% !important;
+        height: 100% !important;
+        display: grid !important;
+        grid-template-columns: repeat(8, minmax(0, 1fr)) !important;
+        grid-template-rows: repeat(8, minmax(0, 1fr)) !important;
+    }
+}/* =========================================
+   CORRECCIONES FINALES DE INTERFAZ
+   ========================================= */
+
+/* 1. ARREGLO DE MENÚS (AI, ONLINE, ESPERA) */
+/* Esto fuerza a que las opciones vuelvan a estar una debajo de otra (Vertical) */
+#menu-config-ia, 
+#menu-online, 
+#pantalla-espera {
+    display: none; /* JS controla cuando se muestran */
+    flex-direction: column !important; /* CRÍTICO: Alineación vertical */
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    gap: 25px; /* Espacio entre las cajas */
+    background-color: rgba(0,0,0,0.85); /* Fondo oscuro para resaltar */
+    position: fixed; /* Asegura que cubran toda la pantalla */
+    top: 0;
+    left: 0;
+    z-index: 2000;
+}
+
+/* Evitamos que las cajas de opciones se estiren demasiado */
+.caja-online, .grupo-opciones {
+    width: 300px;
+    max-width: 90%;
+    margin: 10px 0;
+}
+
+/* 2. PULIDO DEL PANEL DERECHO (EN JUEGO) */
+/* Esto arregla el botón rojo gigante y la superposición */
+.panel-derecho {
+    /* Le damos espacio interno para que nada toque los bordes */
+    padding: 25px !important; 
+    gap: 20px !important; /* Separación clara entre relojes y botón */
+    
+    /* Aseguramos que el contenido esté centrado pero no estirado */
+    justify-content: center !important; 
+}
+
+/* Forzar estilo del botón Salir para que se vea normal */
+#btn-salir-partida {
+    width: 100% !important; 
+    max-width: 200px !important; /* Evita que sea gigante */
+    height: auto !important;
+    padding: 12px 20px !important;
+    font-size: 1.1em !important;
+    margin: 0 !important; /* El gap del panel se encarga de la separación */
+    
+    /* Sombra para que destaque */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+/* Ajuste final a los relojes */
+.contenedor-relojes {
+    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+.reloj {
+    width: 100% !important;
+    max-width: 180px; /* Ancho uniforme para ambos relojes */
+    box-sizing: border-box;
+}/* =========================================
+   AJUSTES FINALES DE POSICIÓN (HEADER Y BOTÓN)
+   ========================================= */
+
+/* 1. RE-DEFINIR LA REJILLA PARA QUE EL TÍTULO OCUPE TODO EL ANCHO */
+#contenedor-principal-juego {
+    grid-template-areas: 
+        "cabecera cabecera"  /* Fila 1: Título ocupa todo el ancho */
+        "tableros panel" !important;    /* Fila 2: Tableros y Relojes */
+    grid-template-rows: auto 1fr !important;
+}
+
+/* 2. BOTÓN SALIR: POSICIÓN ABSOLUTA (Esquina Izquierda) */
+#btn-salir-partida {
+    position: absolute !important; /* Lo sacamos del flujo normal */
+    top: 20px !important;
+    left: 20px !important;
+    margin: 0 !important;
+    z-index: 1000; /* Asegurar que esté encima de todo */
+    
+    /* Estética del botón */
+    width: auto !important;
+    min-width: auto !important;
+    padding: 10px 20px !important;
+    font-size: 1rem !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+/* 3. TÍTULO: CENTRADO Y BLANCO */
+.area-cabecera {
+    grid-area: cabecera; /* Se asegura de ocupar la fila superior completa */
+    background: transparent !important; /* Quitamos el fondo oscuro de la cabecera si quieres que se vea limpio */
+    margin-top: 10px;
+    pointer-events: none; /* Para que no tape clics si se superpone algo */
+}
+
+.area-cabecera h1 {
+    color: #FFFFFF !important; /* Color Blanco */
+    text-shadow: 0 0 10px rgba(0,0,0,0.8); /* Sombra para que se lea bien sobre cualquier fondo */
+    margin-bottom: 5px !important;
+}
+
+#info-online-bar {
+    /* Aseguramos que la info de jugadores también se vea bien */
+    text-shadow: 1px 1px 2px #000;
+    pointer-events: auto;
+}
+
+/* 4. LIMPIEZA DEL PANEL DERECHO */
+.panel-derecho {
+    /* Como ya no tiene el botón, centramos los relojes verticalmente */
+    justify-content: center !important;
+    background: rgba(0, 0, 0, 0.4) !important; /* Un poco más transparente */
+    border: none !important;
+}/* =========================================
+   SOLUCIÓN DEFINITIVA: CENTRADO DE TÍTULO
+   ========================================= */
+
+/* 1. TÍTULO FLOTANTE CENTRADO */
+.area-cabecera {
+    /* Lo sacamos del flujo normal para centrarlo en la PANTALLA, no en la columna */
+    position: absolute !important;
+    top: 10px !important;
+    left: 50% !important;
+    
+    /* Esta técnica asegura el centro exacto */
+    transform: translateX(-50%) !important;
+    
+    width: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 500; /* Por encima de los tableros */
+    pointer-events: none; /* Deja pasar los clics por si acaso */
+}
+
+/* Forzar estilos de texto */
+.area-cabecera h1 {
+    color: #FFFFFF !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+    margin: 0 !important;
+    text-align: center;
+    white-space: nowrap; /* Evita que se parta en dos líneas */
+}
+
+#info-online-bar {
+    text-shadow: 0 1px 2px #000;
+    margin-top: 5px;
+    background: rgba(0,0,0,0.5); /* Fondo suave para que se lea la info */
+    padding: 2px 10px;
+    border-radius: 10px;
+}
+
+/* 2. EMPUJAR EL CONTENIDO HACIA ABAJO */
+/* Como el título ahora "flota", necesitamos hacer espacio para los tableros */
+#contenedor-principal-juego {
+    /* Le damos aire arriba (padding-top) igual a la altura del título */
+    padding-top: 80px !important; 
+    
+    /* Reajustamos las filas del grid para que no esperen una cabecera */
+    grid-template-rows: 1fr !important; 
+    grid-template-areas: "tableros panel" !important;
+}
+
+/* Ajuste final para móviles: que el título no se salga */
+@media (max-width: 900px) {
+    .area-cabecera {
+        position: relative !important; /* En celular que vuelva a ser normal */
+        left: auto !important;
+        transform: none !important;
+        top: auto !important;
+        margin-bottom: 20px;
+    }
+    #contenedor-principal-juego {
+        padding-top: 10px !important;
+        grid-template-rows: auto auto 1fr !important;
+        grid-template-areas: "panel" "cabecera" "tableros" !important;
+    }
+}
+.casilla-ultimo-movimiento {
+    /* Nuevo Gris basado en tu imagen (139, 139, 139) */
+    background-color: rgba(139, 139, 139, 0.6) !important; 
+}/* --- ALERTA DE JAQUE (BORDE ROJO) --- */
+/* REEMPLAZA LA ÚLTIMA COINCIDENCIA CON ESTO */
+/* EN STYLE.CSS - Reemplaza la ÚLTIMA coincidencia de esta animación */
+@keyframes palpitarJaque {
+    0% {
+        /* Hemos quitado el "8px" sólido. Ahora es solo un resplandor ajustado */
+        /* box-shadow: offset-x | offset-y | blur-radius | spread-radius | color */
+        box-shadow: 0 0 15px 2px rgba(231, 76, 60, 0.7);
+    }
+    50% {
+        /* El resplandor se expande y se vuelve más intenso */
+        box-shadow: 0 0 30px 5px rgba(231, 76, 60, 1);
+    }
+    100% {
+        box-shadow: 0 0 15px 2px rgba(231, 76, 60, 0.7);
+    }
+}
+/* EN STYLE.CSS - Borra el bloque .tablero-en-jaque anterior y pega ESTO: */
+
+/* 1. Desactivamos el brillo en el contenedor grande (el que tiene el espacio negro) */
+.tablero-en-jaque {
+    animation: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    z-index: 50;
+}
+
+/* 2. Activamos el brillo DIRECTAMENTE en la cuadrícula de casillas (Hijo) */
+/* Esto hace que el marco rojo se pegue exactamente a las piezas */
+.tablero-en-jaque .tablero {
+    animation: palpitarJaque 1s infinite ease-in-out;
+    z-index: 51;
+}
+
+
