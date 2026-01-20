@@ -1033,3 +1033,51 @@ input[type=range] {
         transform: rotate(180deg) !important;
     }
 }
+
+
+/* =========================================================
+   CORRECCIÓN CRÍTICA: PANTALLA NEGRA EN JAQUE / SKINS
+   ========================================================= */
+
+/* 1. Forzamos que el estado de JAQUE sea transparente en el fondo */
+/* Esto evita que un color sólido tape la imagen de la skin */
+.tablero-en-jaque,
+.wrapper-tablero.tablero-en-jaque,
+.wrapper-tablero.con-skin.tablero-en-jaque {
+    background-color: transparent !important; 
+    background-image: none !important; /* Evita que el jaque intente poner su propia imagen */
+    box-shadow: none !important; /* Quitamos la sombra del contenedor para pasarla al hijo */
+}
+
+/* 2. Aplicamos el brillo rojo SOLO al borde o como sombra, sin tocar el fondo */
+/* Usamos el hijo directo (.tablero) para que el brillo quede exacto */
+.tablero-en-jaque .tablero {
+    animation: palpitarJaque 1s infinite ease-in-out !important;
+    background-color: transparent !important; /* Asegura que la grilla también sea transparente */
+    z-index: 50 !important;
+}
+
+/* 3. Redefinimos la animación para asegurar que NO pinte el fondo de negro */
+@keyframes palpitarJaque {
+    0% {
+        box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.6), 0 0 15px rgba(255, 0, 0, 0.6);
+    }
+    50% {
+        box-shadow: inset 0 0 40px 10px rgba(255, 0, 0, 0.9), 0 0 30px rgba(255, 0, 0, 0.9);
+    }
+    100% {
+        box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.6), 0 0 15px rgba(255, 0, 0, 0.6);
+    }
+}
+
+/* 4. ASEGURAR VISIBILIDAD DE PIEZAS Y SKIN */
+/* Esto garantiza que la imagen de la skin siempre tenga prioridad */
+.wrapper-tablero.con-skin {
+    z-index: 10 !important;
+}
+
+/* Las piezas siempre encima de cualquier efecto de jaque */
+.pieza {
+    z-index: 100 !important;
+    position: relative;
+}
