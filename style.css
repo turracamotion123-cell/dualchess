@@ -1000,4 +1000,29 @@ input[type=range] {
     z-index: 51;
 }
 
+/* =========================================================
+   PARCHE CRÍTICO: ARREGLO VISTA JUGADOR 2 (ONLINE)
+   ========================================================= */
+
+@media (max-width: 900px) {
+    
+    /* 1. Rotamos los TABLEROS individuales si el juego tiene la clase 'volteado' (Jugador 2) */
+    /* Esto es necesario porque el contenedor padre es invisible con display:contents */
+    .juego-completo.volteado #wrapper-principal,
+    .juego-completo.volteado #wrapper-fantasma {
+        transform: rotate(180deg) !important;
+    }
+
+    /* 2. Enderezamos las PIEZAS */
+    /* Al rotar el tablero, las piezas quedan de cabeza. Esto las vuelve a poner de pie. */
+    .juego-completo.volteado .pieza {
+        transform: rotate(180deg) !important;
+    }
+
+    /* 3. (Opcional) Rotamos las coordenadas si las usaras */
+    .juego-completo.volteado .notacion-numeros,
+    .juego-completo.volteado .notacion-letras {
+        transform: rotate(180deg) !important;
+    }
+}
 
