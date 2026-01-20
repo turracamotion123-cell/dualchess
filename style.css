@@ -1001,46 +1001,46 @@ input[type=range] {
 }
 
 /* =========================================================
-   CORRECCIÓN DEFINITIVA: JAQUE QUE RESPETA LA SKIN
+   SOLUCIÓN FINAL JAQUE: TÉCNICA DE LA CAPA SUPERPUESTA
    ========================================================= */
 
-/* 1. Al contenedor en jaque le quitamos el color negro, PERO NO LA IMAGEN */
+/* 1. Preparamos el contenedor para que acepte la capa encima */
 .tablero-en-jaque, 
-.wrapper-tablero.tablero-en-jaque,
-.wrapper-tablero.con-skin.tablero-en-jaque {
-    /* Hacemos transparente el color de fondo solido */
-    background-color: transparent !important; 
+.wrapper-tablero.tablero-en-jaque {
+    position: relative !important;
+    /* IMPORTANTE: No tocamos el background. 
+       Así la skin o el color original se quedan quietos. */
+}
+
+/* 2. Creamos la "Capa de Cristal Rojo" (Overlay) */
+/* Esto crea un elemento fantasma que se pone ENCIMA del tablero */
+.tablero-en-jaque::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
     
-    /* CRÍTICO: No tocamos background-image. 
-       Al no poner 'none', la skin que pone tu JS se mantiene visible. */
-}
-
-/* 2. El efecto de Jaque será SOLO una sombra roja interna */
-/* Esto se dibuja "encima" de la skin sin borrarla */
-.tablero-en-jaque .tablero {
-    box-shadow: inset 0 0 40px 10px rgba(255, 0, 0, 0.7) !important;
-    animation: palpitarJaque 1s infinite ease-in-out !important;
+    /* El efecto rojo (Sombra interna fuerte) */
+    box-shadow: inset 0 0 30px 10px rgba(255, 0, 0, 0.7) !important;
+    animation: palpitarJaqueOverlay 1s infinite ease-in-out !important;
     
-    /* La rejilla interna también transparente para ver la skin */
-    background: transparent !important; 
-    z-index: 50 !important;
+    /* Z-INDEX CLAVE: */
+    z-index: 50 !important; /* Se pone ENCIMA de las casillas (que son nivel 0) */
+    pointer-events: none !important; /* Deja pasar los clics para mover piezas */
 }
 
-/* 3. Animación de pulsación roja (Solo luz, sin fondo) */
-@keyframes palpitarJaque {
-    0% { 
-        box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.5); 
-    }
-    50% { 
-        box-shadow: inset 0 0 60px 20px rgba(255, 0, 0, 0.9); 
-    }
-    100% { 
-        box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.5); 
-    }
-}
-
-/* 4. Aseguramos que las piezas floten encima del brillo */
+/* 3. Las piezas deben flotar ENCIMA de la capa roja */
+/* Si no, se verían teñidas de rojo también */
 .pieza {
-    z-index: 100 !important;
-    position: relative;
+    z-index: 100 !important; /* Nivel superior a todo */
+    position: relative !important;
+}
+
+/* 4. La animación exclusiva para la capa */
+@keyframes palpitarJaqueOverlay {
+    0% { box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.5); }
+    50% { box-shadow: inset 0 0 60px 15px rgba(255, 0, 0, 0.9); }
+    100% { box-shadow: inset 0 0 20px 5px rgba(255, 0, 0, 0.5); }
 }
