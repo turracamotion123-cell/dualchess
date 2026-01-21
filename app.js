@@ -216,13 +216,21 @@ let datosUsuario = {
         });
     }
 
-    function chequearAnuncioIntersticial() {
+   function chequearAnuncioIntersticial() {
         datosUsuario.partidasJugadas++;
         guardarDatosUsuario();
+
+        // Si es partida par (2, 4, 6...) lanzamos anuncio
         if (datosUsuario.partidasJugadas % 2 === 0) {
-            setTimeout(() => {
-                mostrarAlerta("📢 PUBLICIDAD PANTALLA COMPLETA 📢\n\n(Simulación AdMob)\n\n¡Gracias por apoyar el juego!");
-            }, 800);
+            if (window.AppInventor) {
+                // Señal para Kodular: "Muestra el anuncio de pantalla completa"
+                window.AppInventor.setWebViewString("MOSTRAR_INTERSTICIAL");
+            } else {
+                // Simulación para PC
+                setTimeout(() => {
+                    console.log("Simulación PC: Aquí saldría el Intersticial");
+                }, 800);
+            }
         }
     }
 
@@ -1577,25 +1585,44 @@ function getPawnMoves(f, c, co, p) {
     function mostrarToast(m) { toastNotificacion.innerText=m; toastNotificacion.classList.add('visible'); setTimeout(()=>{toastNotificacion.classList.remove('visible');},2000); }
 
     // --- LÓGICA BOTÓN ANUNCIO TIENDA (+5 MONEDAS) ---
+    // 1. Función que KODULAR llamará cuando termine el video real
+    window.sumarMonedas = function(cantidad) {
+        datosUsuario.monedas += cantidad;
+        guardarDatosUsuario();
+        mostrarAlerta("¡Has recibido +" + cantidad + " Monedas!");
+        AudioController.play('snd-victoria');
+        renderizarTienda(); 
+        actualizarInterfazMonedas();
+        
+        // Reactivar el botón visualmente
+        const btn = document.getElementById('btn-ad-tienda');
+        if(btn) {
+            btn.disabled = false;
+            btn.innerText = "+5 Monedas";
+            btn.style.backgroundColor = "#8e44ad";
+        }
+    };
+
     const btnAdTienda = document.getElementById('btn-ad-tienda');
     
     if(btnAdTienda) {
         btnAdTienda.addEventListener('click', () => {
             const textoOriginal = btnAdTienda.innerText;
             btnAdTienda.disabled = true;
-            btnAdTienda.innerText = "📺 ...";
+            btnAdTienda.innerText = "Cargando...";
             btnAdTienda.style.backgroundColor = "#555";
-            mostrarAlerta("Viendo anuncio publicitario...");
-            setTimeout(() => {
-                datosUsuario.monedas += 5; // Sumar 5 monedas
-                guardarDatosUsuario();
-                mostrarAlerta("¡Anuncio completado! \nRecibiste +5 Monedas.");
-                AudioController.play('snd-victoria');
-                btnAdTienda.disabled = false;
-                btnAdTienda.innerText = textoOriginal;
-                btnAdTienda.style.backgroundColor = "#8e44ad";
-                renderizarTienda();
-            }, 3000);
+
+            // AQUÍ ESTÁ EL CAMBIO: Preguntamos si existe la App
+            if (window.AppInventor) {
+                // Si estamos en el celular, pedimos el video real
+                window.AppInventor.setWebViewString("QUIERO_VIDEO");
+            } else {
+                // Si estamos en PC, simulamos para que no te trabes probando
+                console.log("Modo PC: Simulando anuncio...");
+                setTimeout(() => {
+                    window.sumarMonedas(5); 
+                }, 2000);
+            }
         });
     }
 
